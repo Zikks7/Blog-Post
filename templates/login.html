@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+    <form action="{{url_for('login')}}" method="post">
+
+        <div class="mb-3">
+            <h2>Login</h2>
+        </div>
+        <label for="email">Email:</label>
+        <input class="form-control mx-auto w-auto" type="email" name="email" id="">
+
+        <label for="password">Password</label>
+        <input class="form-control mx-auto w-auto" type="password" name="password" id="">
+        <button class="btn btn-primary">Login</button>
+        <p>Yet to have an account? </p><a href="{{url_for('signup')}}">
+
+    </form>
+{% endblock %}

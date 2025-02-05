@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+<form action="{{url_for('edit',post_id=posts.id)}}", method="post">
+    <h2>
+        Edit the post with title {{posts.title}}
+    </h2>
+    <label for="title">Title</label>
+    <input type="text" name="title" value={{posts.title}} required>
+    <br>
+    <br>
+    <label for="content">Article</label>
+    <textarea type="text" name="content" required>{{posts.content}}</textarea>
+    <br>
+    <br>
+    <button type= "submit"> Submit</button>
+
+</form>
+{% endblock %}
