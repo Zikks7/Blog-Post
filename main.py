@@ -182,6 +182,3 @@ def delete():
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-# put = update evrything in database
-# patch = specific items in database
