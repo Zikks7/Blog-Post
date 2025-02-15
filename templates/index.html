@@ -4,13 +4,14 @@
     <header>
         <h3>Welcome to this blog</h3>
     </header>
+    <div class="feed">
         {% for  blog in blogs%}
-            <h2>{{blog.title}}</h2>
-            <h3>{{blog.author}}</h3>
-            <p>{{blog.content}}</p>
-            <p>{{blog.created_on}}</p>
-        
+        <h2>{{blog.title}}</h2>
+        <h3>{{blog.author}}</h3>
+        <p>{{blog.content}}</p>
+        <p>{{blog.created_on}}</p>
         {% endfor %}
+    </div>
 </div>
 
 

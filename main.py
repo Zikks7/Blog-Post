@@ -1,13 +1,13 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import jsonify, Flask, render_template, request, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_required, login_user, current_user, logout_user
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
-import datetime
+import datetime, os
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI']="sqlite:///blog.db"
+app.config['SQLALCHEMY_DATABASE_URI']=os.getenv("DATABASE_URL", "postgresql://blog_hate_user:EpHLBE8Vjth9HgKXdapeuoiIYnefOSzC@dpg-cuogfm56l47c73cdlgng-a/blog_hate")
 app.secret_key="ichascnchdcuncducbeduc"
 
 db = SQLAlchemy(app)
@@ -78,14 +78,15 @@ def signup():
 
         email_check=Users.query.filter_by(email=email).first()
         user_check= Users.query.filter_by(username=username).first()
-        if user_check or email_check:
-
-            return ("user or email already exist")
-        new_user = Users(username=username, email =email, password =generate_password_hash(password), gender=gender)
-        db.session.add(new_user)
-        db.session.commit()
-        print("three")
-        return redirect(url_for('login'))
+        try:
+            if user_check or email_check:
+                return jsonify ({"user or email already exist"}),400
+            new_user = Users(username=username, email =email, password =generate_password_hash(password), gender=gender)
+            db.session.add(new_user)
+            db.session.commit()
+            return redirect(url_for('login'))
+        except Exception as e:
+            return jsonify ({"Error":f"Internal Server Error: {str(e)}"}), 500
     return render_template('signup.html', current_year = year)
 
 @app.route('/login', methods= ["POST", "GET"])
@@ -168,16 +169,19 @@ def edit(post_id):
 
 @app.route('/delete', methods = ['GET','POST'])
 def delete():
-    post_id = request.args.get("post.id")
+    post_id = request.args.get("post_id")
+    if not post_id:
+        return jsonify({"error": "Missing post_id parameter"}), 400
     post_to_delete = Posts.query.filter_by(id=post_id).first()
-    # print(post to delete)
-    if post_to_delete:
-        try:
-            db.session.delete(post_to_delete)
-            db.session.commit()
-            return redirect(url_for ('profile'))
-        except TypeError:
-            print('An error ocurred or something like that')
+    if not post_to_delete:
+        return jsonify({"error": "Post not found"}), 404
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        return redirect(url_for('profile'))
+    except Exception as e:
+        db.session.rollback()  # Rollback to avoid corruption
+        return jsonify({"error": f"internal server error, Error: {str (e)}"}),500
 
 if __name__ == '__main__':
     app.run(debug=True)

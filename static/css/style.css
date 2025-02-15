@@ -59,9 +59,15 @@ body {
     display: flex;
     flex-direction: column;
     text-align: center;
-    padding: 0 5% 0 5%;
     gap: 1rem;
   }
+.feed{
+  border: 1px;
+}
+.username, .gender{
+  border: 1px;
+  padding: 20px;
+}
 
   form{
     max-width: 300px;
@@ -93,7 +99,6 @@ body {
     height: 100px;
     padding: 1rem;
     border: 1px solid #333;
-    color: #ffffff;
     border-radius: 8px;
     resize: none;
   }
