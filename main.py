@@ -4,11 +4,13 @@ from flask_login import LoginManager, UserMixin, login_required, login_user, cur
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 import datetime, os
+from dotenv import load_dotenv
 
+load_dotenv()
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI']=os.getenv("DATABASE_URL")
-app.secret_key="ichascnchdcuncducbeduc"
+app.secret_key= os.getenv("secret_key")
 
 db = SQLAlchemy(app)
 
